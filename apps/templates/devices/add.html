@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Device CRUD</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Device Form</h1>
+        <form method="post" action="{% if device %}{{ url_for('device_blueprint.edit_device', id=device.id) }}{% else %}{{ url_for('device_blueprint.add_device') }}{% endif %}">
+            {{ form.hidden_tag() }} <!-- Include the CSRF token -->
+            <!-- Add this block to display validation errors -->
+            {% for field, errors in form.errors.items() %}
+            <ul class="errors">
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+            <!-- End of validation error block -->
+            <div class="form-group">
+                <label for="device_ip">Device IP:</label>
+                <input type="text" class="form-control" id="device_ip" name="device_ip" required {% if device %}value="{{ device.device_ip }}"{% endif %}>
+            </div>
+            <div class="form-group">
+                <label for="device_name">Device Name:</label>
+                <input type="text" class="form-control" id="device_name" name="device_name" required {% if device %}value="{{ device.device_name }}"{% endif %}>
+            </div>
+            <button type="submit" class="btn btn-success">
+                {% if device %}Update Device{% else %}Add Device{% endif %}
+            </button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

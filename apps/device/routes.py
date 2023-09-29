@@ -13,17 +13,28 @@ def devices():
 
 @blueprint.route('/devices/add', methods=['GET', 'POST'])
 def add_device():
+    print('add_device')
     form = DeviceForm()
     if form.validate_on_submit():
-        device = Device(
-            device_ip=form.device_ip.data,
-            device_name=form.device_name.data
-        )
-        db.session.add(device)
-        db.session.commit()
-        flash('Device added successfully', 'success')
-        return redirect(url_for('device_blueprint.devices'))
+        print("form.device_ip.data")
+        try:
+            device = Device(
+                device_ip=form.device_ip.data,
+                device_name=form.device_name.data
+            )
+            db.session.add(device)
+            db.session.commit()
+            print(device)
+            flash('Device added successfully', 'success')
+            return redirect(url_for('device_blueprint.devices'))
+        except Exception as e:
+            db.session.rollback()  # Rollback the session in case of an error
+            flash('An error occurred while adding the device', 'error')
+            print(str(e))  # Print the error for debugging
+    else:
+        print('nhi howw')
     return render_template('devices/add.html', form=form)
+
 
 @blueprint.route('/devices/edit/<int:id>', methods=['GET', 'POST'])
 def edit_device(id):
