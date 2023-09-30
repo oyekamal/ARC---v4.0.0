@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Devices in Group</title>
+    <title>Edit Group Devices</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Devices in Group: {{ group.group_name }}</h1>
+        <h1>Edit Devices in Group: {{ group.group_name }}</h1>
         <form method="post" action="{{ url_for('device_blueprint.add_or_remove_devices_from_group', group_id=group.id) }}">
             {{ group_form.csrf_token }}
             <table class="table">
@@ -26,7 +26,7 @@
                         <td>{{ device.device_ip }}</td>
                         <td>{{ device.device_name }}</td>
                         <td>
-                            <input type="checkbox" name="device_ids[]" value="{{ device.id }}" {% if device in group.devices %}checked{% endif %}>
+                            <input type="checkbox" name="device_ids[]" value="{{ device.id }}" {% if device.id in selected_device_ids %}checked{% endif %}>
                         </td>
                     </tr>
                     {% endfor %}
@@ -34,6 +34,7 @@
             </table>
             <button type="submit" class="btn btn-success">Update Devices in Group</button>
         </form>
+        
     </div>
 
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>

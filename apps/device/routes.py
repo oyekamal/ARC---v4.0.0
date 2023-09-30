@@ -73,7 +73,7 @@ def groups():
 
 @blueprint.route('/groups/add', methods=['GET', 'POST'])
 def add_group():
-    groups = Group.query.all()
+    # groups = Group.query.all()
     group_form = GroupForm()
     if group_form.validate_on_submit():
         try:
@@ -131,37 +131,27 @@ def delete_group(id):
     return redirect(url_for('device_blueprint.groups'))
 
 
-@blueprint.route('/groups/<int:group_id>/devices', methods=['GET'])
-def list_devices_in_group(group_id):
+@blueprint.route('/groups/<int:group_id>/devices', methods=['GET', 'POST'])
+def add_or_remove_devices_from_group(group_id):
     group = Group.query.get(group_id)
-    return render_template('groups/list_devices.html', group=group)
+    group_form = GroupForm(obj=group)
 
+    available_devices = Device.query.all()
+    selected_device_ids = [device.id for device in group.devices]
 
-@blueprint.route('/groups/<int:group_id>/devices/add', methods=['GET', 'POST'])
-def add_device_to_group(group_id):
-    group = Group.query.get(group_id)
-    available_devices = Device.query.filter(Device not in group.devices).all()
     if request.method == 'POST':
-        device_id = request.form.get('device_id')
-        device = Device.query.get(device_id)
-        if device:
-            group.devices.append(device)
-            db.session.commit()
-            flash('Device added to the group successfully', 'success')
-            return redirect(url_for('device_blueprint.list_devices_in_group', group_id=group_id))
-        else:
-            flash('Invalid device selected', 'error')
-    return render_template('groups/add_device.html', group=group, available_devices=available_devices)
+        selected_device_ids = request.form.getlist('device_ids[]')  # Get a list of selected device IDs from the form
 
+        # Clear the group's devices to start with an empty list
+        group.devices = []
 
-@blueprint.route('/groups/<int:group_id>/devices/remove/<int:device_id>', methods=['POST'])
-def remove_device_from_group(group_id, device_id):
-    group = Group.query.get(group_id)
-    device = Device.query.get(device_id)
-    if device and device in group.devices:
-        group.devices.remove(device)
+        # Iterate over the available devices and add them to the group if they are in the selected IDs
+        for device in available_devices:
+            if str(device.id) in selected_device_ids:
+                group.devices.append(device)
+
         db.session.commit()
-        flash('Device removed from the group successfully', 'success')
-    else:
-        flash('Invalid device or device not in the group', 'error')
-    return redirect(url_for('device_blueprint.list_devices_in_group', group_id=group_id))
+        flash('Devices in the group have been updated successfully', 'success')
+        return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)
+
+    return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)
