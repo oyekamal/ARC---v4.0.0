@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Group</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Edit Group</h1>
+        <form method="post" action="{{ url_for('device_blueprint.edit_group', id=group.id) }}">
+            {{ group_form.csrf_token }}
+            {% for field, errors in group_form.errors.items() %}
+            <ul class="errors">
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+            <div class="form-group">
+                <label for="group_name">Group Name:</label>
+                <input type="text" class="form-control" id="group_name" name="group_name" value="{{ group_form.group_name.data }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Update Group</button>
+        </form>
+        <p>Existing Group Name: {{ group.group_name }}</p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

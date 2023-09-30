@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Devices in Group</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Devices in Group: {{ group.group_name }}</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Device IP</th>
+                    <th>Device Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in group.devices %}
+                <tr>
+                    <td>{{ device.id }}</td>
+                    <td>{{ device.device_ip }}</td>
+                    <td>{{ device.device_name }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('device_blueprint.remove_device_from_group', group_id=group.id, device_id=device.id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this device from the group?')">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Add Device to Group</h2>
+        <form method="post" action="{{ url_for('device_blueprint.add_device_to_group', group_id=group.id) }}">
+            <div class="form-group">
+                <label for="device_id">Select a Device:</label>
+                <select class="form-control" id="device_id" name="device_id">
+                    {% for device in available_devices %}
+                    <option value="{{ device.id }}">{{ device.device_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Add Device to Group</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>
