@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Device</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Edit Device</h1>
+        <form method="post" action="{{ url_for('device_blueprint.edit_device', id=device.id) }}">
+            {{ form.hidden_tag() }}
+            <!-- Add this block to display validation errors -->
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field, errors in form.errors.items() %}
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <!-- End of validation error block -->
+            <div class="form-group">
+                <label for="device_ip">Device IP:</label>
+                <input type="text" class="form-control" id="device_ip" name="device_ip" required value="{{ form.device_ip.data }}">
+            </div>
+            <div class="form-group">
+                <label for="device_name">Device Name:</label>
+                <input type="text" class="form-control" id="device_name" name="device_name" required value="{{ form.device_name.data }}">
+            </div>
+            <button type="submit" class="btn btn-success">Update Device</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>
