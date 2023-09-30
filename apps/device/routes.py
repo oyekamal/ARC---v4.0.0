@@ -152,6 +152,6 @@ def add_or_remove_devices_from_group(group_id):
 
         db.session.commit()
         flash('Devices in the group have been updated successfully', 'success')
-        return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)
-
+        # return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)
+        return redirect(url_for('device_blueprint.groups'))
     return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)

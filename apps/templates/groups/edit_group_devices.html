@@ -26,7 +26,8 @@
                         <td>{{ device.device_ip }}</td>
                         <td>{{ device.device_name }}</td>
                         <td>
-                            <input type="checkbox" name="device_ids[]" value="{{ device.id }}" {% if device.id in selected_device_ids %}checked{% endif %}>
+                            <input type="checkbox" name="device_ids[]" value="{{ device.id }}"
+                            {% if device.id in selected_device_ids %}checked{% endif %}>
                         </td>
                     </tr>
                     {% endfor %}
