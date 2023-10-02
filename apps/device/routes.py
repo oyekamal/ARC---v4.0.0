@@ -26,6 +26,21 @@ def update_device_status(id):
     
     return redirect(url_for('device_blueprint.devices'))
 
+@blueprint.route('/update_group/<int:group_id>', methods=['POST'])
+def update_group(group_id):
+    group = Group.query.get_or_404(group_id)
+    
+    if request.method == 'POST':
+        new_status = int(request.form.get('is_on', 0))
+        group.is_on = bool(new_status)
+        print(group)
+        for device in group.devices:
+            device.is_on = bool(new_status)
+            publisher(device.device_name, "hello world")
+        db.session.commit()
+
+    return redirect(url_for('device_blueprint.groups'))
+
 @blueprint.route('/devices/add', methods=['GET', 'POST'])
 def add_device():
     form = DeviceForm()

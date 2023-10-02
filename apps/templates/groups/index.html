@@ -43,6 +43,7 @@
                     <th>Group Name</th>
                     <th>Action</th>
                     <th>Add or Remove Devices</th> <!-- Added column for the button -->
+                    <th>Is On</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,6 +59,17 @@
                     </td>
                     <td>
                         <a href="{{ url_for('device_blueprint.add_or_remove_devices_from_group', group_id=group.id) }}" class="btn btn-primary btn-sm">Add or Remove Devices</a>
+                    </td>
+                    <td>
+                        <form method="post" action="{{ url_for('device_blueprint.update_group', group_id=group.id) }}" style="display: inline;">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_on" value="1" {% if group.is_on %}checked{% endif %}> On
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_on" value="0" {% if not group.is_on %}checked{% endif %}> Off
+                            </label>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}

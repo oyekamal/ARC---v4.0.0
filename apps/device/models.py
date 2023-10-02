@@ -12,6 +12,7 @@ class Group(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     group_name = db.Column(db.String(255), unique=True, nullable=False)
+    is_on = db.Column(db.Boolean, default=False)
 
     # Define the many-to-many relationship with Device
     devices = relationship('Device', secondary='group_device_association', back_populates='groups')
