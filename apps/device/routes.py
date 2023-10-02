@@ -5,7 +5,7 @@ from apps import db
 from apps.device.forms import DeviceForm, GroupForm
 from apps.device.models import Device, Group
 from apps.device import blueprint
-
+from apps.device.util import publisher
 
 @blueprint.route('/devices', methods=['GET', 'POST'])
 def devices():
@@ -21,6 +21,8 @@ def update_device_status(id):
         new_status = int(request.form.get('is_on', 0))
         device.is_on = bool(new_status)
         db.session.commit()
+        print(device.device_name)
+        publisher(device.device_name, "hello world")
     
     return redirect(url_for('device_blueprint.devices'))
 
