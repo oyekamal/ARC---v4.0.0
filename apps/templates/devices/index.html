@@ -42,6 +42,7 @@
                     <th>ID</th>
                     <th>Device IP</th>
                     <th>Device Name</th>
+                    <th>Is On</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -51,6 +52,17 @@
                     <td>{{ device.id }}</td>
                     <td>{{ device.device_ip }}</td>
                     <td>{{ device.device_name }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('device_blueprint.update_device_status', id=device.id) }}" style="display: inline;">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_on" value="1" {% if device.is_on %}checked{% endif %}> On
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_on" value="0" {% if not device.is_on %}checked{% endif %}> Off
+                            </label>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                    </td>
                     <td>
                         <a href="{{ url_for('device_blueprint.edit_device', id=device.id) }}" class="btn btn-primary btn-sm">Edit</a>
                         <form method="post" action="{{ url_for('device_blueprint.delete_device', id=device.id) }}" style="display: inline;">
@@ -62,7 +74,7 @@
             </tbody>
         </table>
     </div>
-
+    
 </div>
 {% endblock content %}
 

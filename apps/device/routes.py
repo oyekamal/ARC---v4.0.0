@@ -13,6 +13,17 @@ def devices():
     return render_template('devices/index.html', devices=devices)
 
 
+@blueprint.route('/update_device_status/<int:id>', methods=['POST'])
+def update_device_status(id):
+    device = Device.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        new_status = int(request.form.get('is_on', 0))
+        device.is_on = bool(new_status)
+        db.session.commit()
+    
+    return redirect(url_for('device_blueprint.devices'))
+
 @blueprint.route('/devices/add', methods=['GET', 'POST'])
 def add_device():
     form = DeviceForm()
