@@ -33,6 +33,9 @@ class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     device_ip = db.Column(db.String(255), unique=True)
     device_name = db.Column(db.String(255), unique=True)
+    extra = db.Column(db.JSON, nullable=True)
+    is_on = db.Column(db.Boolean, default=False)
+
     # Define the many-to-many relationship back-reference to Group
     groups = relationship('Group', secondary='group_device_association', back_populates='devices')
 
