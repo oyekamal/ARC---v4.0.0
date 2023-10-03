@@ -21,6 +21,8 @@
 
 <br />
 when the master is running. open another terminal and run activate the environment using.
+
+
 ```bash
 1. source venv/bin/activate
 2. python flask_subscribe.py
