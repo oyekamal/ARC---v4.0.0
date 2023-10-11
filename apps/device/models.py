@@ -27,6 +27,21 @@ group_device_association = db.Table(
     db.Column('device_id', db.Integer, db.ForeignKey('device.id'))
 )
 
+
+class Relay(db.Model):
+    __tablename__ = 'relay'
+
+    id = db.Column(db.Integer, primary_key=True)
+    relay_number = db.Column(db.Integer, nullable=False)
+    is_on = db.Column(db.Boolean, default=False)
+
+    # Define a foreign key relationship to the Device table
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
+    device = db.relationship('Device', back_populates='relays')
+
+    def __repr__(self):
+        return f"Relay {self.relay_number} for Device {self.device_id}"
+
 class Device(db.Model):
 
     __tablename__ = 'device'
@@ -37,6 +52,9 @@ class Device(db.Model):
     extra = db.Column(db.JSON, nullable=True)
     is_on = db.Column(db.Boolean, default=False)
 
+    # Define the one-to-many relationship with Relay
+    relays = db.relationship('Relay', back_populates='device')
+    
     # Define the many-to-many relationship back-reference to Group
     groups = relationship('Group', secondary='group_device_association', back_populates='devices')
 
