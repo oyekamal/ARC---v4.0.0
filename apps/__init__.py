@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 
 import os
 
@@ -10,10 +6,12 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 from flask_migrate import Migrate
+from flask_mqtt import Mqtt
 
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+mqtt = Mqtt()  # Initialize Flask-MQTT
 
 
 def register_extensions(app):
@@ -56,4 +54,14 @@ def create_app(config):
     register_extensions(app)
     register_blueprints(app)
     configure_database(app)
+
+    # Initialize Flask-MQTT
+    app.config['MQTT_BROKER_URL'] = 'broker.hivemq.com'
+    app.config['MQTT_BROKER_PORT'] = 1883
+    app.config['MQTT_USERNAME'] = ''
+    app.config['MQTT_PASSWORD'] = ''
+    app.config['MQTT_KEEPALIVE'] = 5
+    app.config['MQTT_TLS_ENABLED'] = False
+    mqtt.init_app(app)
+
     return app

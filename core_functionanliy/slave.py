@@ -19,7 +19,7 @@ device_info = {
     "device_name": "Slave1",
     "extra_info": "Some extra info",
     "ip": "127.0.0.1",
-    "port": "5000",
+    "port": "5001",
     "RELAY_PINS":{
         1: 3,
         2: 4,

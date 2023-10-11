@@ -6,6 +6,9 @@ from apps.device.forms import DeviceForm, GroupForm
 from apps.device.models import Device, Group
 from apps.device import blueprint
 from apps.device.util import publisher
+from apps import mqtt
+import ast
+
 
 @blueprint.route('/devices', methods=['GET', 'POST'])
 def devices():
@@ -183,3 +186,25 @@ def add_or_remove_devices_from_group(group_id):
         # return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)
         return redirect(url_for('device_blueprint.groups'))
     return render_template('groups/edit_group_devices.html', group=group, available_devices=available_devices, group_form=group_form, selected_device_ids=selected_device_ids)
+
+
+
+print("mqtt is available")
+
+@mqtt.on_connect()
+def handle_connect(client, userdata, flags, rc):
+    print("Master connected to MQTT broker")
+    # Subscribe to the 'master/slaves' topic
+    mqtt.subscribe('master/slaves')
+
+@mqtt.on_message()
+def handle_message(client, userdata, message):
+    string = message.payload.decode('utf-8')
+    payload = ast.literal_eval(string)
+    print(payload['device_name'])
+    if payload.get('device_name'):
+        result = mqtt.publish(payload['device_name'], str({"message": "connected to master",}))
+        if result:
+            print("Message sent to slave successfully")
+        else:
+            print("Failed to send message to slave")
