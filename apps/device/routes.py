@@ -201,7 +201,7 @@ def handle_connect(client, userdata, flags, rc):
 def handle_message(client, userdata, message):
     string = message.payload.decode('utf-8')
     payload = ast.literal_eval(string)
-    print(payload['device_name'])
+    print(payload)
     if payload.get('device_name'):
         result = mqtt.publish(payload['device_name'], str({"message": "connected to master",}))
         if result:
