@@ -1,23 +1,50 @@
+ # if 'device_name' in payload and 'ip' in payload:
+    #     device_name = payload['device_name']
+    #     device_ip = payload['ip']
 
-from apps import mqtt
-import ast
+    #     # Check if the device already exists in the database
+    #     existing_device = Device.query.filter_by(device_name=device_name, device_ip=device_ip).first()
 
-print("mqtt is available")
+    #     if existing_device:
+    #         # Update the existing device's information
+    #         existing_device.is_on = True  # Update as needed
+    #         existing_device.extra = payload.get('extra')  # Update extra info as needed
 
-@mqtt.on_connect()
-def handle_connect(client, userdata, flags, rc):
-    print("Master connected to MQTT broker")
-    # Subscribe to the 'master/slaves' topic
-    mqtt.subscribe('master/slaves')
+    #         # Update or create relays
+    #         if 'RELAY_PINS' in payload:
+    #             for relay_number, relay_pin in payload['RELAY_PINS'].items():
+    #                 relay = Relay.query.filter_by(device_id=existing_device.id, relay_pin=relay_pin).first()
+    #                 if relay:
+    #                     relay.is_on = True  # Update as needed
+    #                     relay.relay_name = f"Relay {relay_number}"  # Update as needed
+    #                 else:
+    #                     new_relay = Relay(
+    #                         relay_pin=relay_pin,
+    #                         is_on=True,  # Update as needed
+    #                         relay_name=f"Relay {relay_number}",  # Update as needed
+    #                         device=existing_device
+    #                     )
+    #                     db.session.add(new_relay)
 
-@mqtt.on_message()
-def handle_message(client, userdata, message):
-    string = message.payload.decode('utf-8')
-    payload = ast.literal_eval(string)
-    print(payload['device_name'])
-    if payload.get('device_name'):
-        result = mqtt.publish(payload['device_name'], str({"message": "connected to master",}))
-        if result:
-            print("Message sent to slave successfully")
-        else:
-            print("Failed to send message to slave")
+    #     else:
+    #         # Create a new device entry
+    #         new_device = Device(
+    #             device_name=device_name,
+    #             device_ip=device_ip,
+    #             is_on=True,  # Update as needed
+    #             extra=payload.get('extra')  # Update extra info as needed
+    #         )
+    #         db.session.add(new_device)
+
+    #         # Create relays for the new device
+    #         if 'RELAY_PINS' in payload:
+    #             for relay_number, relay_pin in payload['RELAY_PINS'].items():
+    #                 new_relay = Relay(
+    #                     relay_pin=relay_pin,
+    #                     is_on=True,  # Update as needed
+    #                     relay_name=f"Relay {relay_number}",  # Update as needed
+    #                     device=new_device
+    #                 )
+    #                 db.session.add(new_relay)
+
+    #     db.session.commit()
