@@ -32,7 +32,7 @@ class Relay(db.Model):
     __tablename__ = 'relay'
 
     id = db.Column(db.Integer, primary_key=True)
-    relay_number = db.Column(db.Integer, nullable=False)
+    relay_pin = db.Column(db.Integer, nullable=False)
     is_on = db.Column(db.Boolean, default=False)
     relay_name = db.Column(db.String(255), nullable=True)
     # Define a foreign key relationship to the Device table
