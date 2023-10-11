@@ -34,7 +34,7 @@ class Relay(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     relay_number = db.Column(db.Integer, nullable=False)
     is_on = db.Column(db.Boolean, default=False)
-
+    relay_name = db.Column(db.String(255), nullable=True)
     # Define a foreign key relationship to the Device table
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
     device = db.relationship('Device', back_populates='relays')
@@ -47,14 +47,14 @@ class Device(db.Model):
     __tablename__ = 'device'
 
     id = db.Column(db.Integer, primary_key=True)
-    device_ip = db.Column(db.String(255), unique=True)
-    device_name = db.Column(db.String(255), unique=True)
+    device_ip = db.Column(db.String(255), nullable=True)
+    device_name = db.Column(db.String(255), nullable=True)
     extra = db.Column(db.JSON, nullable=True)
     is_on = db.Column(db.Boolean, default=False)
 
     # Define the one-to-many relationship with Relay
     relays = db.relationship('Relay', back_populates='device')
-    
+
     # Define the many-to-many relationship back-reference to Group
     groups = relationship('Group', secondary='group_device_association', back_populates='devices')
 
