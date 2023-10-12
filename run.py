@@ -12,6 +12,7 @@ from apps.config import config_dict
 from apps import create_app, db
 from apps import mqtt
 import ast
+from apps.device.mqtt_routes import update_create_device
 
 # WARNING: Don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
@@ -46,8 +47,7 @@ def handle_message(client, userdata, message):
     payload = ast.literal_eval(string)
     print(payload)
     with app.app_context():
-        from apps.device.models import Device, Group, Relay
-        d = Device.query.all()
+        update_create_device(payload)
     if payload.get('device_name'):
         result = mqtt.publish(payload['device_name'], str({"message": "connected to master"}))
         if result:
