@@ -189,6 +189,33 @@ def add_or_remove_devices_from_group(group_id):
 
 
 
+@blueprint.route('/device_relays/<int:device_id>')
+def device_relays(device_id):
+    device = Device.query.get(device_id)
+    return render_template('devices/device_relays.html', device=device)
+
+
+
+@blueprint.route('/update_relay_status/<int:id>', methods=['POST'])
+def update_relay_status(id):
+    relay = Relay.query.get(id)
+    if relay:
+        is_on = request.form.get('is_on') == '1'  # Check the value of the radio button
+        relay.is_on = is_on
+        db.session.commit()
+    return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
+
+@blueprint.route('/edit_relay/<int:id>', methods=['GET', 'POST'])
+def edit_relay(id):
+    relay = Relay.query.get(id)
+
+    if request.method == 'POST':
+        is_on = request.form.get('is_on') == '1'
+        relay.is_on = is_on
+        relay.relay_name = request.form.get('relay_name')  # Update relay_name
+        db.session.commit()
+        return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
+    return render_template('devices/edit_relay.html', relay=relay)
 # print("mqtt is available")
 
 # @mqtt.on_connect()

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Device Relays</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Device Relays for {{ device.device_name }}</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Relay Pin</th>
+                    <th>Is On</th>
+                    <th>Relay Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for relay in device.relays %}
+                <tr>
+                    <td>{{ relay.id }}</td>
+                    <td>{{ relay.relay_pin }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('device_blueprint.update_relay_status', id=relay.id) }}" style="display: inline;">
+                            <label class="radio-inline">
+                                <input type="radio" name="is_on" value="1" {% if relay.is_on %}checked{% endif %}> On
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_on" value="0" {% if not relay.is_on %}checked{% endif %}> Off
+                            </label>
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </form>
+                    </td>
+                    <td>{{ relay.relay_name }}</td>
+                    <td>
+                        <a href="{{ url_for('device_blueprint.edit_relay', id=relay.id) }}" class="btn btn-primary btn-sm">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

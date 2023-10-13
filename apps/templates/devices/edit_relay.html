@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Relay</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Edit Relay for {{ relay.device.device_name }}</h1>
+        <form method="post" action="{{ url_for('device_blueprint.edit_relay', id=relay.id) }}">
+            <div class="form-group">
+                <label for="is_on">Is On:</label>
+                <label class="radio-inline">
+                    <input type="radio" name="is_on" value="1" {% if relay.is_on %}checked{% endif %}> On
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="is_on" value="0" {% if not relay.is_on %}checked{% endif %}> Off
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="relay_name">Relay Name:</label>
+                <input type="text" name="relay_name" value="{{ relay.relay_name }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Relay</button>
+        </form>
+    </div>
+</body>
+</html>
