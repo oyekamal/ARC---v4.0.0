@@ -5,9 +5,9 @@ from apps import db
 from apps.device.forms import DeviceForm, GroupForm
 from apps.device.models import Device, Group, Relay
 from apps.device import blueprint
-from apps.device.util import publisher
 from apps import mqtt
 import ast
+from apps.device.mqtt_routes import send_request_to_device
 
 
 @blueprint.route('/devices', methods=['GET', 'POST'])
@@ -203,6 +203,7 @@ def update_relay_status(id):
         is_on = request.form.get('is_on') == '1'  # Check the value of the radio button
         relay.is_on = is_on
         db.session.commit()
+        send_request_to_device(device_name=relay.device.device_name, relay=relay)
     return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
 
 @blueprint.route('/edit_relay/<int:id>', methods=['GET', 'POST'])
@@ -214,6 +215,7 @@ def edit_relay(id):
         relay.is_on = is_on
         relay.relay_name = request.form.get('relay_name')  # Update relay_name
         db.session.commit()
+        send_request_to_device(device_name=relay.device.device_name, relay=relay)
         return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
     return render_template('devices/edit_relay.html', relay=relay)
 # print("mqtt is available")

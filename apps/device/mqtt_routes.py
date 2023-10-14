@@ -1,5 +1,28 @@
 from apps import db
 from apps.device.models import Device, Group, Relay
+from apps.device.utils import DEVICE_JSON
+from flask_mqtt import Mqtt
+from apps import mqtt
+
+
+def update_relay_json(relays):
+    relay_on_off_list = []
+    for each_relay in relays:
+        relay_on_off_list.append({each_relay.relay_pin: each_relay.is_on})
+    return relay_on_off_list
+
+
+def send_request_to_device(device_name, relay,
+                           data=DEVICE_JSON):
+    data['relay_on_off'] = update_relay_json([relay])
+    data['device_name'] = device_name
+    data['device_update'] = True
+    data['message'] = "Update relay"
+    result = mqtt.publish(device_name, str(data))
+    if result:
+        print("Message Send Request to Device.")
+    else:
+        print("Failed to Send Request to Device")
 
 
 def update_create_device(payload):

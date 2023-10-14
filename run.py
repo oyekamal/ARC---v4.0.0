@@ -13,6 +13,8 @@ from apps import create_app, db
 from apps import mqtt
 import ast
 from apps.device.mqtt_routes import update_create_device
+from apps.device.utils import DEVICE_JSON
+
 
 # WARNING: Don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
@@ -47,9 +49,11 @@ def handle_message(client, userdata, message):
     payload = ast.literal_eval(string)
     print(payload)
     with app.app_context():
+        # data = DEVICE_JSON.copy()
         update_create_device(payload)
     if payload.get('device_name'):
-        result = mqtt.publish(payload['device_name'], str({"message": "connected to master"}))
+        payload["message"] = "Hello '" + payload['device_name'] + "' i'm master!!"
+        result = mqtt.publish(payload['device_name'], str(payload))
         if result:
             print("Message sent to slave successfully")
         else:

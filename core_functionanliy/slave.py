@@ -33,18 +33,16 @@ device_info = {
         7: 9,
         8: 10,
     },
+    "relay_on_off": [],
+    "message": "hello Master",
+    "device_update": False,
 }
 
-RELAY_PINS = {
-    1: 3,
-    2: 4,
-    3: 5,
-    4: 6,
-    5: 7,
-    6: 8,
-    7: 9,
-    8: 10,
-}
+# def update_relay_json(relays):
+#     relay_on_off_list = []
+#     for each_relay in relays:
+#         relay_on_off_list.append({each_relay.relay_pin: each_relay.is_on})
+#     return relay_on_off_list
 
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
@@ -64,6 +62,9 @@ def handle_message(client, userdata, message):
     payload = ast.literal_eval(string)
 
     print(payload)
+    if payload['device_update'] and payload['relay_on_off']:
+        print(payload['relay_on_off'])
+        # logic for toggling device
     print(f"Received message from {message.topic}: {payload['message']}")
 
 @app.route('/')
