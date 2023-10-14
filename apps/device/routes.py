@@ -241,29 +241,6 @@ def add_relay_group():
     
     return render_template('devices/add_relay_group.html')
 
-@blueprint.route('/relay_groups/add_relay/<int:relay_group_id>', methods=['POST'])
-def add_relay_to_group(relay_group_id):
-    relay_group = RelayGroup.query.get(relay_group_id)
-    relay_id = request.form.get('relay_id')  # Assuming you have a form field for relay selection
-    relay = Relay.query.get(relay_id)
-    
-    if relay and relay_group:
-        relay_group.relays.append(relay)
-        db.session.commit()
-    
-    return redirect(url_for('device_blueprint.list_relay_groups'))
-
-@blueprint.route('/relay_groups/remove_relay/<int:relay_group_id>', methods=['POST'])
-def remove_relay_from_group(relay_group_id):
-    relay_group = RelayGroup.query.get(relay_group_id)
-    relay_id = request.form.get('relay_id')  # Assuming you have a form field for relay selection
-    relay = Relay.query.get(relay_id)
-    
-    if relay and relay_group:
-        relay_group.relays.remove(relay)
-        db.session.commit()
-    
-    return redirect(url_for('device_blueprint.list_relay_groups'))
 
 @blueprint.route('/relay_groups/edit/<int:relay_group_id>', methods=['GET', 'POST'])
 def edit_relay_group(relay_group_id):
