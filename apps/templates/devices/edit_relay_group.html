@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Relay Group</title>
+</head>
+<body>
+    <h1>Edit Relay Group</h1>
+    <form method="POST">
+        <label for="group_name">Group Name:</label>
+        <input type="text" name="group_name" value="{{ relay_group.group_name }}" required>
+        <br>
+        <label for="is_on">Is On:</label>
+        <input type="checkbox" name="is_on" {% if relay_group.is_on %}checked{% endif %}>
+        <br>
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>

@@ -3,7 +3,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from apps import db
 from apps.device.forms import DeviceForm, GroupForm
-from apps.device.models import Device, Group, Relay
+from apps.device.models import Device, Group, Relay, RelayGroup
 from apps.device import blueprint
 from apps import mqtt
 import ast
@@ -25,7 +25,7 @@ def update_device_status(id):
         device.is_on = bool(new_status)
         db.session.commit()
         print(device.device_name)
-        publisher(device.device_name, "hello world")
+        # publisher(device.device_name, "hello world")
     
     return redirect(url_for('device_blueprint.devices'))
 
@@ -218,6 +218,77 @@ def edit_relay(id):
         send_request_to_device(device_name=relay.device.device_name, relay=relay)
         return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
     return render_template('devices/edit_relay.html', relay=relay)
+
+
+# CRUD operations for RelayGroup
+@blueprint.route('/relay_groups', methods=['GET'])
+def list_relay_groups():
+    relay_groups = RelayGroup.query.all()
+    return render_template('devices/relay_groups.html', relay_groups=relay_groups)
+
+@blueprint.route('/relay_groups/add_relay_group', methods=['GET', 'POST'])
+def add_relay_group():
+    if request.method == 'POST':
+        group_name = request.form['group_name']
+        is_on = request.form.get('is_on') == 'on'
+
+        # Create a new RelayGroup
+        new_group = RelayGroup(group_name=group_name, is_on=is_on)
+        db.session.add(new_group)
+        db.session.commit()
+
+        return redirect(url_for('device_blueprint.list_relay_groups'))
+    
+    return render_template('devices/add_relay_group.html')
+
+@blueprint.route('/relay_groups/add_relay/<int:relay_group_id>', methods=['POST'])
+def add_relay_to_group(relay_group_id):
+    relay_group = RelayGroup.query.get(relay_group_id)
+    relay_id = request.form.get('relay_id')  # Assuming you have a form field for relay selection
+    relay = Relay.query.get(relay_id)
+    
+    if relay and relay_group:
+        relay_group.relays.append(relay)
+        db.session.commit()
+    
+    return redirect(url_for('device_blueprint.list_relay_groups'))
+
+@blueprint.route('/relay_groups/remove_relay/<int:relay_group_id>', methods=['POST'])
+def remove_relay_from_group(relay_group_id):
+    relay_group = RelayGroup.query.get(relay_group_id)
+    relay_id = request.form.get('relay_id')  # Assuming you have a form field for relay selection
+    relay = Relay.query.get(relay_id)
+    
+    if relay and relay_group:
+        relay_group.relays.remove(relay)
+        db.session.commit()
+    
+    return redirect(url_for('device_blueprint.list_relay_groups'))
+
+@blueprint.route('/relay_groups/edit/<int:relay_group_id>', methods=['GET', 'POST'])
+def edit_relay_group(relay_group_id):
+    relay_group = RelayGroup.query.get(relay_group_id)
+    
+    if request.method == 'POST':
+        new_group_name = request.form['group_name']
+        is_on = request.form.get('is_on') == 'on'
+        
+        if relay_group:
+            relay_group.group_name = new_group_name
+            relay_group.is_on = is_on
+            db.session.commit()
+    
+    return render_template('devices/edit_relay_group.html', relay_group=relay_group)
+
+@blueprint.route('/relay_groups/delete/<int:relay_group_id>', methods=['POST'])
+def delete_relay_group(relay_group_id):
+    relay_group = RelayGroup.query.get(relay_group_id)
+    
+    if relay_group:
+        db.session.delete(relay_group)
+        db.session.commit()
+    
+    return redirect(url_for('device_blueprint.list_relay_groups'))
 # print("mqtt is available")
 
 # @mqtt.on_connect()
