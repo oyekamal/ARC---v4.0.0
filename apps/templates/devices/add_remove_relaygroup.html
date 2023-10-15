@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Relays in Group: {{ group.group_name }}</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Edit Relays in Group: {{ group.group_name }}</h1>
+        <form method="post" action="{{ url_for('device_blueprint.add_or_remove_relay_from_group', group_id=group.id) }}">
+            {{ group_form.hidden_tag() }}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Relay Name</th>
+                        <th>Relay Pin</th>
+                        <th>Add to Group</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for relay in available_relays %}
+                        <tr>
+                            <td>{{ relay.id }}</td>
+                            <td>{{ relay.relay_name }}</td>
+                            <td>{{ relay.relay_pin }}</td>
+                            <td>
+                                <input type="checkbox" name="relay_ids[]" value="{{ relay.id }}"
+                                {% if relay.id in selected_relay_ids %}checked{% endif %}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <input type="submit" value="Update Relays" class="btn btn-success">
+        </form>
+        <a href="{{ url_for('device_blueprint.list_relay_groups') }}" class="btn btn-secondary">Back to Relay Groups</a>
+    </div>
+</body>
+</html>

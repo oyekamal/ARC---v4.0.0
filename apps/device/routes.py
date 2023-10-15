@@ -266,6 +266,30 @@ def delete_relay_group(relay_group_id):
         db.session.commit()
     
     return redirect(url_for('device_blueprint.list_relay_groups'))
+
+
+@blueprint.route('/relaygroups/<int:group_id>/relay', methods=['GET', 'POST'])
+def add_or_remove_relay_from_group(group_id):
+    group = RelayGroup.query.get(group_id)
+    group_form = GroupForm(obj=group)
+
+    available_relays = Relay.query.all()
+    selected_relay_ids = [relay.id for relay in group.relays]
+
+    if request.method == 'POST':
+        selected_relay_ids = request.form.getlist('relay_ids[]')  # Get a list of selected relays IDs from the form
+
+        group.relays = []
+
+        for relay in available_relays:
+            if str(relay.id) in selected_relay_ids:
+                group.relays.append(relay)
+
+        db.session.commit()
+        flash('relay in the group have been updated successfully', 'success')
+        return redirect(url_for('device_blueprint.list_relay_groups'))
+    return render_template('devices/add_remove_relaygroup.html', group=group, available_relays=available_relays, group_form=group_form, selected_relay_ids=selected_relay_ids)
+
 # print("mqtt is available")
 
 # @mqtt.on_connect()
