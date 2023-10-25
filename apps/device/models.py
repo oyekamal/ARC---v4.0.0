@@ -44,7 +44,7 @@ class Relay(db.Model):
     
 
     def __repr__(self):
-        return f"Relay {self.relay_number} for Device {self.device_id}"
+        return f"Relay {self.relay_name}"
 
 class Device(db.Model):
 

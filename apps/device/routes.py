@@ -23,8 +23,15 @@ def update_device_status(id):
     if request.method == 'POST':
         new_status = int(request.form.get('is_on', 0))
         device.is_on = bool(new_status)
+        if device.relays:
+            for each_relay in device.relays:
+                each_relay.is_on = bool(new_status)
+
         db.session.commit()
+
+
         print(device.device_name)
+        send_request_to_device(device.device_name, device.relays)
         # publisher(device.device_name, "hello world")
     
     return redirect(url_for('device_blueprint.devices'))
@@ -203,7 +210,7 @@ def update_relay_status(id):
         is_on = request.form.get('is_on') == '1'  # Check the value of the radio button
         relay.is_on = is_on
         db.session.commit()
-        send_request_to_device(device_name=relay.device.device_name, relay=relay)
+        send_request_to_device(device_name=relay.device.device_name, relay=[relay])
     return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
 
 @blueprint.route('/edit_relay/<int:id>', methods=['GET', 'POST'])
@@ -215,7 +222,7 @@ def edit_relay(id):
         relay.is_on = is_on
         relay.relay_name = request.form.get('relay_name')  # Update relay_name
         db.session.commit()
-        send_request_to_device(device_name=relay.device.device_name, relay=relay)
+        send_request_to_device(device_name=relay.device.device_name, relay=[relay])
         return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
     return render_template('devices/edit_relay.html', relay=relay)
 

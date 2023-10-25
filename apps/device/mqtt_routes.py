@@ -14,7 +14,7 @@ def update_relay_json(relays):
 
 def send_request_to_device(device_name, relay,
                            data=DEVICE_JSON):
-    data['relay_on_off'] = update_relay_json([relay])
+    data['relay_on_off'] = update_relay_json(relay)
     data['device_name'] = device_name
     data['device_update'] = True
     data['message'] = "Update relay"
