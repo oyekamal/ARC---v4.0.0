@@ -39,7 +39,7 @@ def update_group(group_id):
         print(group)
         for device in group.devices:
             device.is_on = bool(new_status)
-            publisher(device.device_name, "hello world")
+            # publisher(device.device_name, "hello world")
         db.session.commit()
 
     return redirect(url_for('device_blueprint.groups'))

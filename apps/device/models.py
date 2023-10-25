@@ -41,6 +41,7 @@ class Relay(db.Model):
 
         # Add a many-to-many relationship with RelayGroup
     relay_groups = db.relationship('RelayGroup', secondary='relay_group_relay_association', back_populates='relays')
+    
 
     def __repr__(self):
         return f"Relay {self.relay_number} for Device {self.device_id}"
@@ -56,7 +57,7 @@ class Device(db.Model):
     is_on = db.Column(db.Boolean, default=False)
 
     # Define the one-to-many relationship with Relay
-    relays = db.relationship('Relay', back_populates='device')
+    relays = db.relationship('Relay', back_populates='device', cascade='all, delete-orphan')
 
     # Define the many-to-many relationship back-reference to Group
     groups = relationship('Group', secondary='group_device_association', back_populates='devices')
