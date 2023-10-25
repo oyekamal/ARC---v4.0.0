@@ -15,11 +15,11 @@ mqtt = Mqtt(app)
 
 # Define the IP and port you want the app to run on
 import socket
-custom_ip = socket.gethostbyname(socket.gethostname())
+custom_ip = '127.0.0.12'
 custom_port = 8080
 
 device_info = {
-    "device_name": "Slave1",
+    "device_name": "kamal-2",
     "extra_info": "Some extra info",
     "ip": custom_ip,
     "port": custom_port,
@@ -27,11 +27,6 @@ device_info = {
         1: 3,
         2: 4,
         3: 5,
-        4: 6,
-        5: 7,
-        6: 8,
-        7: 9,
-        8: 10,
     },
     "relay_on_off": [],
     "message": "hello Master",
