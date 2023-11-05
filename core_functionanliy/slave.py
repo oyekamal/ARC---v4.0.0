@@ -62,9 +62,9 @@ def handle_message(client, userdata, message):
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
                 if value:
-                    GPIO.output(key, GPIO.HIGH)
+                    GPIO.output(int(key), GPIO.HIGH)
                 else:
-                    GPIO.output(key, GPIO.LOW)
+                    GPIO.output(int(key), GPIO.LOW)
 
         # logic for toggling device
     print(f"Received message from {message.topic}: {payload['message']}")
