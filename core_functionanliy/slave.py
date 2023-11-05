@@ -2,6 +2,7 @@ from flask import Flask
 from flask_mqtt import Mqtt
 import ast
 import platform
+import time
 
 # Check if the script is running on a Raspberry Pi
 ON_RASPBERRY_PI = 'arm' in platform.machine()
@@ -74,6 +75,11 @@ device_info = {
 #         relay_on_off_list.append({each_relay.relay_pin: each_relay.is_on})
 #     return relay_on_off_list
 
+def initialize_gpio():
+    GPIO.setmode(GPIO.BCM)
+    for relay_num, pin in device_info["RELAY_PINS"].items():
+        GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
     print("Slave connected to MQTT broker")
@@ -99,8 +105,12 @@ def handle_message(client, userdata, message):
                 GPIO.setup(int(key), GPIO.OUT)
                 if value:
                     GPIO.output(int(key), GPIO.HIGH)
+                    time.sleep(0.5)
+                    GPIO.output(int(key), GPIO.LOW)
                 else:
                     GPIO.output(int(key), GPIO.LOW)
+                    time.sleep(0.5)
+                    GPIO.output(int(key), GPIO.HIGH)
 
         # logic for toggling device
     print(f"Received message from {message.topic}: {payload['message']}")
