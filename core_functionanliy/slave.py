@@ -7,32 +7,7 @@ import time
 # Check if the script is running on a Raspberry Pi
 ON_RASPBERRY_PI = 'arm' in platform.machine()
 
-if ON_RASPBERRY_PI:
-    import RPi.GPIO as GPIO
-else:
-    # Mock the GPIO functions
-    class MockGPIO:
-        BCM = None
-        OUT = None
-        LOW = None
-
-        @staticmethod
-        def setmode(mode):
-            pass
-
-        @staticmethod
-        def setup(pin, mode, initial=None):
-            pass
-
-        @staticmethod
-        def output(pin, state):
-            pass
-
-        @staticmethod
-        def cleanup():
-            pass
-
-    GPIO = MockGPIO
+import RPi.GPIO as GPIO
 
 
 
