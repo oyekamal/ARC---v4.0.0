@@ -49,10 +49,10 @@ device_info = {
 #         relay_on_off_list.append({each_relay.relay_pin: each_relay.is_on})
 #     return relay_on_off_list
 
-def initialize_gpio():
-    GPIO.setmode(GPIO.BCM)
-    for relay_num, pin in device_info["RELAY_PINS"].items():
-        GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+# def initialize_gpio():
+#     GPIO.setmode(GPIO.BCM)
+#     for relay_num, pin in device_info["RELAY_PINS"].items():
+#         GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
 
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
