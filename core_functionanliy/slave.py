@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_mqtt import Mqtt
 import ast
+import RPi.GPIO as GPIO
 
 app = Flask(__name__)
 app.config['SECRET'] = 'my secret key'
@@ -58,6 +59,13 @@ def handle_message(client, userdata, message):
     print(payload)
     if payload['device_update'] and payload['relay_on_off']:
         print(payload['relay_on_off'])
+        for each_relay in payload['relay_on_off']:
+            for key, value in each_relay.items():
+                if value:
+                    GPIO.output(key, GPIO.HIGH)
+                else:
+                    GPIO.output(key, GPIO.LOW)
+
         # logic for toggling device
     print(f"Received message from {message.topic}: {payload['message']}")
 
