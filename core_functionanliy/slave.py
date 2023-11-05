@@ -4,16 +4,15 @@ import ast
 import platform
 import time
 
-# Check if the script is running on a Raspberry Pi
-ON_RASPBERRY_PI = 'arm' in platform.machine()
-
 import RPi.GPIO as GPIO
 
-
+# Check if the script is running on a Raspberry Pi
+ON_RASPBERRY_PI = 'arm' in platform.machine()
 
 if ON_RASPBERRY_PI:
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
+
 app = Flask(__name__)
 app.config['SECRET'] = 'my secret key'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -77,15 +76,19 @@ def handle_message(client, userdata, message):
         print(payload['relay_on_off'])
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
-                GPIO.setup(int(key), GPIO.OUT)
-                if value:
-                    GPIO.output(int(key), GPIO.HIGH)
-                    time.sleep(0.5)
-                    GPIO.output(int(key), GPIO.LOW)
-                else:
-                    GPIO.output(int(key), GPIO.LOW)
-                    time.sleep(0.5)
-                    GPIO.output(int(key), GPIO.HIGH)
+                GPIO.setup(key, GPIO.OUT)
+                GPIO.output(key, GPIO.HIGH)
+                time.sleep(0.5)
+                GPIO.output(key, GPIO.LOW)
+                # GPIO.setup(int(key), GPIO.OUT)
+                # if value:
+                #     GPIO.output(int(key), GPIO.HIGH)
+                #     time.sleep(0.5)
+                #     GPIO.output(int(key), GPIO.LOW)
+                # else:
+                #     GPIO.output(int(key), GPIO.LOW)
+                #     time.sleep(0.5)
+                #     GPIO.output(int(key), GPIO.HIGH)
 
         # logic for toggling device
     print(f"Received message from {message.topic}: {payload['message']}")
