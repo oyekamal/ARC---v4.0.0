@@ -66,7 +66,6 @@ def handle_connect(client, userdata, flags, rc):
 
 @mqtt.on_message()
 def handle_message(client, userdata, message):
-    print("Message", message)
 
     string = message.payload.decode('utf-8')
     payload = ast.literal_eval(string)
@@ -76,10 +75,17 @@ def handle_message(client, userdata, message):
         print(payload['relay_on_off'])
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
+                print("sending request to pin", key)
                 GPIO.setup(key, GPIO.OUT)
                 GPIO.output(key, GPIO.HIGH)
-                time.sleep(0.5)
+                print("...............high.................")
+                time.sleep(0.8)
+                print("--------------break after 0.8s------------------")
                 GPIO.output(key, GPIO.LOW)
+                print("...............low.................")
+
+                print("...............toogle end.................")
+
                 # GPIO.setup(int(key), GPIO.OUT)
                 # if value:
                 #     GPIO.output(int(key), GPIO.HIGH)
