@@ -19,14 +19,13 @@ custom_ip = '127.0.0.12'
 custom_port = 8080
 
 device_info = {
-    "device_name": "kamal-2",
+    "device_name": "TD-16R-2-open",
     "extra_info": "Some extra info",
     "ip": custom_ip,
     "port": custom_port,
     "RELAY_PINS": {
         1: 3,
         2: 4,
-        3: 5,
     },
     "relay_on_off": [],
     "message": "hello Master",
