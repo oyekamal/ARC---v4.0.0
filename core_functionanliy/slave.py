@@ -61,6 +61,7 @@ def handle_message(client, userdata, message):
         print(payload['relay_on_off'])
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
+                GPIO.setup(key, GPIO.OUT)
                 if value:
                     GPIO.output(int(key), GPIO.HIGH)
                 else:
