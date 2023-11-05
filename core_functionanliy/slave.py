@@ -7,11 +7,11 @@ import time
 import RPi.GPIO as GPIO
 
 # Check if the script is running on a Raspberry Pi
-ON_RASPBERRY_PI = 'arm' in platform.machine()
+# ON_RASPBERRY_PI = 'arm' in platform.machine()
 
-if ON_RASPBERRY_PI:
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
+# if ON_RASPBERRY_PI:
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 app = Flask(__name__)
 app.config['SECRET'] = 'my secret key'
