@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_mqtt import Mqtt
 import ast
+import platform
+
 # Check if the script is running on a Raspberry Pi
 ON_RASPBERRY_PI = 'arm' in platform.machine()
 
