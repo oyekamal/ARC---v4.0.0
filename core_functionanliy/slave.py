@@ -1,8 +1,41 @@
 from flask import Flask
 from flask_mqtt import Mqtt
 import ast
-import RPi.GPIO as GPIO
+# Check if the script is running on a Raspberry Pi
+ON_RASPBERRY_PI = 'arm' in platform.machine()
 
+if ON_RASPBERRY_PI:
+    import RPi.GPIO as GPIO
+else:
+    # Mock the GPIO functions
+    class MockGPIO:
+        BCM = None
+        OUT = None
+        LOW = None
+
+        @staticmethod
+        def setmode(mode):
+            pass
+
+        @staticmethod
+        def setup(pin, mode, initial=None):
+            pass
+
+        @staticmethod
+        def output(pin, state):
+            pass
+
+        @staticmethod
+        def cleanup():
+            pass
+
+    GPIO = MockGPIO
+
+
+
+if ON_RASPBERRY_PI:
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
 app = Flask(__name__)
 app.config['SECRET'] = 'my secret key'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -61,7 +94,7 @@ def handle_message(client, userdata, message):
         print(payload['relay_on_off'])
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
-                GPIO.setup(key, GPIO.OUT)
+                GPIO.setup(int(key), GPIO.OUT)
                 if value:
                     GPIO.output(int(key), GPIO.HIGH)
                 else:
