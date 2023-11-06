@@ -4,7 +4,8 @@ import ast
 import platform
 import time
 
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO #sudo pip install --upgrade RPi.GPIO
+
 
 # Check if the script is running on a Raspberry Pi
 # ON_RASPBERRY_PI = 'arm' in platform.machine()
