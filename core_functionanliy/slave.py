@@ -11,7 +11,7 @@ import RPi.GPIO as GPIO
 
 # if ON_RASPBERRY_PI:
 GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
+GPIO.setwarnings(True)
 
 app = Flask(__name__)
 app.config['SECRET'] = 'my secret key'
