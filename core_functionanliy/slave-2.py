@@ -28,17 +28,19 @@ mqtt = Mqtt(app)
 # Define the IP and port you want the app to run on
 import socket
 custom_ip = '127.0.0.12'
-custom_port = 8080
+custom_port = 8081
 
 device_info = {
     "device_type": "slave",
-    "device_name": "TD-16R-2-open",
+    "device_name": "TD-8R-2-open",
     "extra_info": "Some extra info",
     "ip": custom_ip,
     "port": custom_port,
     "RELAY_PINS": {
         1: 3,
         2: 4,
+        3: 6,
+        4: 7,
     },
     "relay_on_off": [],
     "message": "hello Master",
@@ -88,6 +90,15 @@ def handle_message(client, userdata, message):
 
                 print("...............toogle end.................")
 
+                # GPIO.setup(int(key), GPIO.OUT)
+                # if value:
+                #     GPIO.output(int(key), GPIO.HIGH)
+                #     time.sleep(0.5)
+                #     GPIO.output(int(key), GPIO.LOW)
+                # else:
+                #     GPIO.output(int(key), GPIO.LOW)
+                #     time.sleep(0.5)
+                #     GPIO.output(int(key), GPIO.HIGH)
 
         # logic for toggling device
     print(f"Received message from {message.topic}: {payload['message']}")
