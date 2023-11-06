@@ -3,11 +3,12 @@
 from flask import render_template, request, redirect, url_for, flash
 from apps import db
 from apps.device.forms import DeviceForm, GroupForm
-from apps.device.models import Device, Group, Relay, RelayGroup
+from apps.device.models import Device, Group, Relay, RelayGroup, RelayRelayGroupAssociation
 from apps.device import blueprint
 from apps import mqtt
 import ast
 from apps.device.mqtt_routes import send_request_to_device
+from flask import Blueprint, jsonify
 
 
 @blueprint.route('/devices', methods=['GET', 'POST'])
@@ -296,6 +297,75 @@ def add_or_remove_relay_from_group(group_id):
         flash('relay in the group have been updated successfully', 'success')
         return redirect(url_for('device_blueprint.list_relay_groups'))
     return render_template('devices/add_remove_relaygroup.html', group=group, available_relays=available_relays, group_form=group_form, selected_relay_ids=selected_relay_ids)
+
+
+
+@blueprint.route('rrga/create', methods=['POST'])
+def create_relay_relay_group_association():
+    relay_id = request.json.get('relay_id')
+    relay_group_id = request.json.get('relay_group_id')
+    is_on = request.json.get('is_on')
+    
+    relay = Relay.query.get(relay_id)
+    relay_group = RelayGroup.query.get(relay_group_id)
+    
+    if not relay or not relay_group:
+        return jsonify({'error': 'Relay or RelayGroup not found'}), 404
+    
+    association = RelayRelayGroupAssociation(relay=relay, relay_group=relay_group, is_on=is_on)
+    db.session.add(association)
+    db.session.commit()
+    
+    return jsonify({'message': 'RelayRelayGroupAssociation created successfully'}), 201
+
+@blueprint.route('rrga/read/<int:id>', methods=['GET'])
+def read_relay_relay_group_association(id):
+    association = RelayRelayGroupAssociation.query.get(id)
+    if not association:
+        return jsonify({'error': 'RelayRelayGroupAssociation not found'}), 404
+    
+    data = {
+        'relay_id': association.relay_id,
+        'relay_group_id': association.relay_group_id,
+        'is_on': association.is_on
+        
+    }
+    
+    return jsonify(data)
+
+@blueprint.route('rrga/update/<int:id>', methods=['PUT'])
+def update_relay_relay_group_association(id):
+    association = RelayRelayGroupAssociation.query.get(id)
+    if not association:
+        return jsonify({'error': 'RelayRelayGroupAssociation not found'}), 404
+    
+    relay_id = request.json.get('relay_id')
+    relay_group_id = request.json.get('relay_group_id')
+    is_on = request.json.get('is_on')
+    
+    relay = Relay.query.get(relay_id)
+    relay_group = RelayGroup.query.get(relay_group_id)
+    
+    if not relay or not relay_group:
+        return jsonify({'error': 'Relay or RelayGroup not found'}), 404
+    
+    association.relay = relay
+    association.relay_group = relay_group
+    association.is_on = is_on
+    db.session.commit()
+    
+    return jsonify({'message': 'RelayRelayGroupAssociation updated successfully'})
+
+@blueprint.route('rrga/delete/<int:id>', methods=['DELETE'])
+def delete_relay_relay_group_association(id):
+    association = RelayRelayGroupAssociation.query.get(id)
+    if not association:
+        return jsonify({'error': 'RelayRelayGroupAssociation not found'}), 404
+    
+    db.session.delete(association)
+    db.session.commit()
+    
+    return jsonify({'message': 'RelayRelayGroupAssociation deleted successfully'})
 
 # print("mqtt is available")
 

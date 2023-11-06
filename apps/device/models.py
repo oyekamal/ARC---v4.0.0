@@ -87,4 +87,17 @@ relay_group_relay_association = db.Table(
 )
 
 
+class RelayRelayGroupAssociation(db.Model):
+    __tablename__ = 'relay_relay_group_association'
+
+    id = db.Column(db.Integer, primary_key=True)
+    relay_id = db.Column(db.Integer, db.ForeignKey('relay.id'), nullable=False)
+    relay_group_id = db.Column(db.Integer, db.ForeignKey('relay_group.id'), nullable=False)
+    is_on = db.Column(db.Boolean, default=True)
+
+    relay = db.relationship('Relay', backref=db.backref('relay_relay_group_associations', cascade='all, delete-orphan'))
+    relay_group = db.relationship('RelayGroup', backref=db.backref('relay_relay_group_associations', cascade='all, delete-orphan'))
+
+    def __repr__(self):
+        return f"RelayRelayGroupAssociation({self.relay_id}, {self.relay_group_id})"
 
