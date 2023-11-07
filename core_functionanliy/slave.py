@@ -78,12 +78,12 @@ def handle_message(client, userdata, message):
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
                 print("sending request to pin", key)
-                # GPIO.setup(key, GPIO.OUT)
-                # GPIO.output(key, GPIO.HIGH)
+                GPIO.setup(key, GPIO.OUT)
+                GPIO.output(key, GPIO.HIGH)
                 print("...............high.................")
                 time.sleep(0.8)
                 print("--------------break after 0.8s------------------")
-                # GPIO.output(key, GPIO.LOW)
+                GPIO.output(key, GPIO.LOW)
                 print("...............low.................")
 
                 print("...............toogle end.................")
