@@ -51,6 +51,7 @@ class Device(db.Model):
     __tablename__ = 'device'
 
     id = db.Column(db.Integer, primary_key=True)
+    device_type = db.Column(db.String(255), nullable=True)
     device_ip = db.Column(db.String(255), nullable=True)
     device_name = db.Column(db.String(255), nullable=True)
     extra = db.Column(db.JSON, nullable=True)

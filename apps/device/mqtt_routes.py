@@ -39,6 +39,8 @@ def update_create_device(payload):
             existing_device.is_on = True  # Update as needed
             existing_device.extra = payload.get(
                 'extra_info')  # Update extra info as needed
+            existing_device.device_type = payload.get(
+                'device_type')  # Update extra info as needed
 
             # Update or create relays
             if 'RELAY_PINS' in payload:
@@ -65,7 +67,9 @@ def update_create_device(payload):
                 device_name=device_name,
                 device_ip=device_ip,
                 is_on=True,  # Update as needed
-                extra=payload.get('extra_info')  # Update extra info as needed
+                extra=payload.get('extra_info'),  # Update extra info as needed
+                device_type=payload.get(
+                'device_type')
             )
             db.session.add(new_device)
 
