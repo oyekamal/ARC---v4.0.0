@@ -280,8 +280,17 @@ def delete_relay_group(relay_group_id):
 def add_or_remove_relay_from_group(group_id):
     group = RelayGroup.query.get(group_id)
     group_form = GroupForm(obj=group)
+    # Define your SQLAlchemy session
+    session = db.session
 
-    available_relays = Relay.query.all()
+    # Query for all relays with associated devices having device_type equal to 'slave'
+    available_relays = (
+        session.query(Relay)
+        .join(Device)  # Join Relay and Device tables
+        .filter(Device.device_type == 'slave')  # Filter by device_type
+        .all()
+    )
+    # available_relays = Relay.query.all()
     selected_relay_ids = [relay.id for relay in group.relays]
 
     if request.method == 'POST':

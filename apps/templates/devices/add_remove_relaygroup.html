@@ -43,6 +43,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Relay Name</th>
+                        <th>Device name</th>
                         <th>Relay Pin</th>
                         <th>Add to Group</th>
                     </tr>
@@ -52,6 +53,7 @@
                         <tr>
                             <td>{{ relay.id }}</td>
                             <td>{{ relay.relay_name }}</td>
+                            <td>{{ relay.device.device_name }}</td>
                             <td>{{ relay.relay_pin }}</td>
                             <td>
                                 <input type="checkbox" name="relay_ids[]" value="{{ relay.id }}"
