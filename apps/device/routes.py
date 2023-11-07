@@ -7,7 +7,7 @@ from apps.device.models import Device, Group, Relay, RelayGroup, RelayRelayGroup
 from apps.device import blueprint
 from apps import mqtt
 import ast
-from apps.device.mqtt_routes import send_request_to_device
+from apps.device.mqtt_routes import send_request_to_device, send_request_to_group_relay
 from flask import Blueprint, jsonify
 
 
@@ -210,8 +210,12 @@ def update_relay_status(id):
     if relay:
         is_on = request.form.get('is_on') == '1'  # Check the value of the radio button
         relay.is_on = is_on
+        if relay.device.device_type == 'slave':
+            send_request_to_device(device_name=relay.device.device_name, relay=[relay])
+        elif relay.device.device_type == 'dummy':
+            send_request_to_group_relay(relay, is_on)
         db.session.commit()
-        send_request_to_device(device_name=relay.device.device_name, relay=[relay])
+
     return redirect(url_for('device_blueprint.device_relays', device_id=relay.device_id))
 
 @blueprint.route('/edit_relay/<int:id>', methods=['GET', 'POST'])

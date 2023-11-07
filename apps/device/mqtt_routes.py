@@ -25,6 +25,17 @@ def send_request_to_device(device_name, relay,
         print("Failed to Send Request to Device")
 
 
+def send_request_to_group_relay(relay, is_on=None):
+    print(relay)
+    if relay.relay_relay_group_associations:
+        for each_group in relay.relay_relay_group_associations:
+            if each_group.relay_group:
+                for relay in each_group.relay_group.relays:
+                    if is_on != None:
+                        relay.is_on = is_on
+                    send_request_to_device(device_name=relay.device.device_name, relay=[relay])
+
+
 def update_create_device(payload):
     if 'device_name' in payload and 'ip' in payload:
         device_name = payload['device_name']
