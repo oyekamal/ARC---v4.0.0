@@ -44,7 +44,6 @@
                     <th>Is On</th>
                     <th>Relay Name</th>
                     <th>Action</th>
-                    <th>Group relay attached</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +66,7 @@
                     <td>
                         <a href="{{ url_for('device_blueprint.edit_relay', id=relay.id) }}" class="btn btn-primary btn-sm">Edit</a>
                     </td>
+                    {% if relay.relay_relay_group_associations %}
                     <td>
                         <!-- Example single danger button -->
                         <div class="btn-group">
@@ -80,6 +80,7 @@
                             </div>
                         </div>
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
