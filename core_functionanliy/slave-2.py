@@ -4,15 +4,15 @@ import ast
 import platform
 import time
 
-# import RPi.GPIO as GPIO #sudo pip install --upgrade RPi.GPIO
+import RPi.GPIO as GPIO #sudo pip install --upgrade RPi.GPIO
 
 
 # # Check if the script is running on a Raspberry Pi
 # # ON_RASPBERRY_PI = 'arm' in platform.machine()
 
 # # if ON_RASPBERRY_PI:
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setwarnings(True)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(True)
 
 app = Flask(__name__)
 app.config['SECRET'] = 'my secret key'
@@ -53,10 +53,10 @@ device_info = {
 #         relay_on_off_list.append({each_relay.relay_pin: each_relay.is_on})
 #     return relay_on_off_list
 
-# def initialize_gpio():
-#     GPIO.setmode(GPIO.BCM)
-#     for relay_num, pin in device_info["RELAY_PINS"].items():
-#         GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+def initialize_gpio():
+    GPIO.setmode(GPIO.BCM)
+    for relay_num, pin in device_info["RELAY_PINS"].items():
+        GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
 
 @mqtt.on_connect()
 def handle_connect(client, userdata, flags, rc):
@@ -108,5 +108,5 @@ def index():
     return "Slave Flask Application"
 
 if __name__ == '__main__':
-    # initialize_gpio()
+    initialize_gpio()
     app.run(host=custom_ip, port=custom_port, debug=True)
