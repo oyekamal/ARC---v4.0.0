@@ -7,10 +7,10 @@ import time
 import RPi.GPIO as GPIO #sudo pip install --upgrade RPi.GPIO
 
 
-# # Check if the script is running on a Raspberry Pi
-# # ON_RASPBERRY_PI = 'arm' in platform.machine()
+# Check if the script is running on a Raspberry Pi
+# ON_RASPBERRY_PI = 'arm' in platform.machine()
 
-# # if ON_RASPBERRY_PI:
+# if ON_RASPBERRY_PI:
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(True)
 
@@ -32,7 +32,7 @@ custom_port = 8082
 
 device_info = {
     "device_type": "dummy",
-    "device_name": "Dummy-16R-2-open",
+    "device_name": "Dummy-16R-3-open",
     "extra_info": "Some extra info",
     "ip": custom_ip,
     "port": custom_port,
@@ -79,12 +79,12 @@ def handle_message(client, userdata, message):
         for each_relay in payload['relay_on_off']:
             for key, value in each_relay.items():
                 print("sending request to pin", key)
-                # GPIO.setup(key, GPIO.OUT)
-                # GPIO.output(key, GPIO.HIGH)
+                GPIO.setup(key, GPIO.OUT)
+                GPIO.output(key, GPIO.HIGH)
                 print("...............high.................")
                 time.sleep(0.8)
                 print("--------------break after 0.8s------------------")
-                # GPIO.output(key, GPIO.LOW)
+                GPIO.output(key, GPIO.LOW)
                 print("...............low.................")
 
                 print("...............toogle end.................")
