@@ -46,6 +46,9 @@ def handle_connect(client, userdata, flags, rc):
 def handle_message(client, userdata, message):
 
     string = message.payload.decode('utf-8')
+    print("--------------data------------------")
+    print(string)
+    print("---------------enddata-----------------")
     payload = ast.literal_eval(string)
     print(payload)
     with app.app_context():
