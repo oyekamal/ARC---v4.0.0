@@ -39,7 +39,7 @@ device_info = {
     "RELAY_PINS": {
         1: 3,
         2: 4,
-        2: 5,
+        3: 5,
     },
     "relay_on_off": [],
     "message": "hello Master",
