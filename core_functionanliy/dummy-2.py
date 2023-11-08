@@ -44,7 +44,7 @@ device_info = {
         2: 4,
         2: 5,
     },
-    "relay_on_off": [{3:False},{4:False},{5:False},],
+    "relay_on_off": [{3:False}],
     "message": "hello Master",
     "device_update": False,
 }
@@ -72,15 +72,23 @@ def send_notification(device_info):
 
 def listen_to_relay_changes():
     while True:
-        for relay_pin in relay_pins_to_monitor:
-            current_state = GPIO.input(relay_pin)
-            for key, value in device_info['relay_on_off'].items(): #[{3:True},{4:False},{5:False},]
-                if relay_pin == key:
-                    if current_state != value:
-                        for each_dict in device_info['relay_on_off']:
-                            if each_dict.get(relay_pin):
-                                each_dict[relay_pin] = current_state
-                        send_notification(device_info)
+        # for relay_pin in relay_pins_to_monitor:
+        #     current_state = GPIO.input(relay_pin)
+        #     for key, value in device_info['relay_on_off'].items(): #[{3:True},{4:False},{5:False},]
+        #         if relay_pin == key:
+        #             if current_state != value:
+        #                 for each_dict in device_info['relay_on_off']:
+        #                     if each_dict.get(relay_pin):
+        #                         each_dict[relay_pin] = current_state
+        #                 send_notification(device_info)
+
+
+        current_state = GPIO.input(3)
+        three = device_info['relay_on_off'][0]
+        value = three['3']
+        if current_state != value:
+            three['3'] = current_state
+            send_notification(device_info)
         time.sleep(1)  # Adjust the interval as needed
 
 @mqtt.on_message()
