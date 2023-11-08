@@ -84,12 +84,12 @@ def listen_to_relay_changes():
 
 
         current_state = GPIO.input(3)
-        three = device_info['relay_on_off']
+        three = device_info['relay_on_off'][0]
         print(three)
         print(type(three))
-        value = three['3']
+        value = three[3]
         if current_state != value:
-            three['3'] = current_state
+            three[3] = current_state
             send_notification(device_info)
         time.sleep(1)  # Adjust the interval as needed
 
