@@ -88,9 +88,10 @@ def listen_to_relay_changes():
         print(three)
         print(type(three))
         value = three[3]
+        print('   current_state --->   ',current_state)
         if current_state != value:
             three[3] = current_state
-            send_notification(device_info)
+            # send_notification(device_info)
         time.sleep(1)  # Adjust the interval as needed
 
 @mqtt.on_message()
