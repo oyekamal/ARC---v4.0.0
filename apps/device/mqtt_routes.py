@@ -97,6 +97,7 @@ def update_create_device(payload):
 
         db.session.commit()
     elif "device_name" in payload and "device_name" in payload:
+        print("sending group request to devices....")
         device_name = payload['device_name']
         existing_device = Device.query.filter_by(
             device_name=device_name).first()
