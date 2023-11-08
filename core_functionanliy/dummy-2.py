@@ -44,7 +44,7 @@ device_info = {
         2: 4,
         2: 5,
     },
-    "relay_on_off": [],
+    "relay_on_off": [{3:False},{4:False},{5:False},],
     "message": "hello Master",
     "device_update": False,
 }
@@ -74,7 +74,7 @@ def listen_to_relay_changes():
     while True:
         for relay_pin in relay_pins_to_monitor:
             current_state = GPIO.input(relay_pin)
-            for key, value in device_info['relay_on_off']:
+            for key, value in device_info['relay_on_off']: #[{3:True},{4:False},{5:False},]
                 if relay_pin == key:
                     if current_state != value:
                         for each_dict in device_info['relay_on_off']:
