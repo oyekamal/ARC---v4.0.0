@@ -96,3 +96,20 @@ def update_create_device(payload):
                     db.session.add(new_relay)
 
         db.session.commit()
+    elif "device_name" in payload and "device_name" in payload:
+        device_name = payload['device_name']
+        existing_device = Device.query.filter_by(
+            device_name=device_name).first()
+
+        if existing_device:
+            if 'relay_on_off' in payload:
+                for relay in payload['relay_on_off']:
+                    for relay_pin, value in relay.items():
+                        relay = Relay.query.filter_by(
+                            device_id=existing_device.id, relay_pin=relay_pin).first()
+                        relay.is_on = value
+                        send_request_to_group_relay(relay, value)
+                        db.session.commit()
+
+
+            
