@@ -39,6 +39,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Group id</th>
                 <th>Group name</th>
                 <th>Edit</th>
                 <th>Edit relay</th>
@@ -48,6 +49,7 @@
         <tbody>
             {% for group in relay_groups %}
                 <tr>
+                    <td>{{ group.id }}</td>
                     <td>{{ group.group_name }}</td>
                     <td><a href="{{ url_for('device_blueprint.edit_relay_group', relay_group_id=group.id) }}">Edit</a></td>
                     <td>
