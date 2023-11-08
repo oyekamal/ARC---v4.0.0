@@ -84,7 +84,9 @@ def listen_to_relay_changes():
 
 
         current_state = GPIO.input(3)
-        three = device_info['relay_on_off'][0]
+        three = device_info['relay_on_off']
+        print(three)
+        print(type(three))
         value = three['3']
         if current_state != value:
             three['3'] = current_state
