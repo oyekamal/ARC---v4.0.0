@@ -35,7 +35,7 @@ for pin in relay_pins_to_monitor:
 
 device_info = {
     "device_type": "dummy",
-    "device_name": "Dummy-16R-2-open",
+    "device_name": "Dummy-16R-3-Relayworking",
     "extra_info": "Some extra info",
     "ip": custom_ip,
     "port": custom_port,
